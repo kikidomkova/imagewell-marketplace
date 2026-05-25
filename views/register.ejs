@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImageWell Marketplace - Registrácia</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background-color: #121212; color: #ffffff; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .reg-card { background: #1e1e1e; padding: 40px; border-radius: 8px; width: 100%; max-width: 400px; border: 1px solid #2c2c2c; }
+        h1 { font-size: 24px; margin-bottom: 20px; text-align: center; color: #ff0055; text-transform: uppercase; }
+        label { display: block; margin-bottom: 8px; color: #aaa; font-size: 14px; }
+        input { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #3d3d3d; color: #fff; border-radius: 4px; margin-bottom: 20px; font-size: 16px; }
+        button { width: 100%; background: #00ff88; color: #000; border: none; padding: 14px; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .error-msg { background: #ff4444; color: white; padding: 10px; border-radius: 4px; font-size: 14px; margin-bottom: 20px; text-align: center; }
+        .success-msg { background: #00ff88; color: black; padding: 10px; border-radius: 4px; font-size: 14px; margin-bottom: 20px; text-align: center; }
+        .link { text-align: center; margin-top: 20px; font-size: 14px; }
+        .link a { color: #ff0055; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="reg-card">
+        <h1>Registrácia</h1>
+        <% if (typeof error !== 'undefined' && error) { %>
+            <div class="error-msg"><%= error %></div>
+        <% } %>
+        <% if (typeof success !== 'undefined' && success) { %>
+            <div class="success-msg"><%= success %></div>
+        <% } %>
+        <form action="/register" method="POST">
+            <label for="username">Používateľské meno</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Heslo</label>
+            <input type="password" id="password" name="password" required>
+            <label for="confirmPassword">Potvrďte heslo</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+            <button type="submit">Vytvoriť účet</button>
+        </form>
+        <div class="link">Už máte účet? <a href="/">Prihláste sa tu</a></div>
+    </div>
+</body>
+</html>

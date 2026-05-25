@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImageWell Marketplace - Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #121212; color: #ffffff; padding: 40px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 2px solid #222; padding-bottom: 20px; }
+        .logo-text { font-size: 24px; font-weight: bold; color: #ff0055; text-transform: uppercase; }
+        .logout-btn { background-color: #333; color: #fff; padding: 8px 16px; text-decoration: none; border-radius: 4px; font-size: 14px; }
+        .logout-btn:hover { background-color: #444; }
+
+        .container { display: flex; gap: 40px; max-width: 1200px; margin: 0 auto 40px auto; }
+        .panel { flex: 1; background: #1e1e1e; padding: 30px; border-radius: 8px; border: 1px solid #2c2c2c; }
+        
+        h2 { margin-bottom: 20px; font-size: 20px; color: #aaa; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #ccc; }
+        
+        select { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #3d3d3d; color: #fff; border-radius: 4px; margin-bottom: 20px; font-size: 16px; }
+        
+        .info-box { background: #252525; padding: 15px; border-left: 4px solid #ff0055; border-radius: 4px; margin-bottom: 25px; display: none; }
+        .info-box p { margin-bottom: 5px; font-size: 14px; color: #bbb; }
+        .info-box span { font-weight: bold; color: #fff; }
+
+        .upload-area { border: 2px dashed #444; padding: 40px 20px; text-align: center; border-radius: 6px; background: #1a1a1a; cursor: pointer; transition: 0.3s; margin-bottom: 15px; }
+        .upload-area:hover { border-color: #ff0055; background: #222; }
+        .upload-area p { color: #888; font-size: 14px; }
+        .upload-area input { display: none; }
+
+        .simulator-container { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .totem-frame { width: 280px; height: 420px; background: #000; border: 10px solid #2a2a2a; border-radius: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.7); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        .screen-placeholder { color: #444; font-size: 14px; text-align: center; padding: 20px; font-weight: bold; text-transform: uppercase; }
+        #preview-video, #preview-image { width: 100%; height: 100%; object-fit: fill; display: none; }
+
+        .history-section { max-width: 1200px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 8px; border: 1px solid #2c2c2c; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #2c2c2c; }
+        th { color: #888; font-size: 14px; background: #181818; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .pending { background: #e67e22; color: #fff; }
+        .approved { background: #2ecc71; color: #fff; }
+        .rejected { background: #e74c3c; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-text">ImageWell <span style="color:#fff">Digital Signage</span></div>
+        <a href="/" class="logout-btn">Odhlásiť sa</a>
+    </div>
+
+    <div class="container">
+        <div class="panel">
+            <h2>Konfigurácia kampane</h2>
+            <form action="/submit-campaign" method="POST" enctype="multipart/form-data">
+                <label for="led-select">1. Vyberte LED obrazovku:</label>
+                <select id="led-select" name="led" onchange="updateLEDInfo()" required>
+                    <option value="" disabled selected>-- Vyberte lokalitetu --</option>
+                    <option value="led28" data-res="202 x 80 px" data-len="Statický obraz / 10s" data-price="45€ / deň">LED 28 – Betliarska</option>
+                    <option value="led15" data-res="384 x 288 px" data-len="Statický obraz / 10s" data-price="60€ / deň">LED 15 – Prístavná</option>
+                </select>
+
+                <div id="info-box" class="info-box">
+                    <p>Požadované rozlíšenie: <span id="res-val">-</span></p>
+                    <p>Typ / Dĺžka spotu: <span id="len-val">-</span></p>
+                    <p>Odhadovaná cena: <span id="price-val">-</span></p>
+                </div>
+
+                <label>2. Nahrajte podklad (.MP4, .JPG, .PNG):</label>
+                <div class="upload-area" onclick="document.getElementById('file-input').click()">
+                    <p id="upload-text">Kliknite sem alebo pretiahnite video (.mp4) alebo obrázok (.jpg, .png)</p>
+                    <input type="file" id="file-input" name="file" accept="video/mp4, image/jpeg, image/png, image/jpg" onchange="previewFile()" required>
+                </div>
+
+                <button type="submit" style="width:100%; background:#ff0055; color:#fff; border:none; padding:14px; border-radius:4px; font-weight:bold; font-size:16px; margin-top:15px; cursor:pointer; transition:0.2s;">Odoslať kampaň na schválenie</button>
+            </form>
+        </div>
+
+        <div class="panel simulator-container">
+            <h2>Živý náhľad na toteme</h2>
+            <div class="totem-frame">
+                <div id="placeholder" class="screen-placeholder">Vyberte LED a nahrávku</div>
+                <video id="preview-video" autoplay loop muted></video>
+                <img id="preview-image" alt="Náhľad grafiky">
+            </div>
+        </div>
+    </div>
+
+    <div class="history-section">
+        <h2>Prehľad mojich objednaných kampaní</h2>
+        <% if (orders.length === 0) { %>
+            <p style="color:#666; margin-top:10px;">Zatiaľ ste neodoslali žiadne kampane.</p>
+        <% } else { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dátum</th>
+                        <th>Obrazovka</th>
+                        <th>Názov súboru</th>
+                        <th>Formát</th>
+                        <th>Stav kampane</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach(order => { %>
+                        <tr>
+                            <td><%= order.date %></td>
+                            <td><strong><%= order.led %></strong></td>
+                            <td><%= order.fileName %></td>
+                            <td><span style="color:#aaa; font-size:13px; text-transform:uppercase;"><%= order.fileType %></span></td>
+                            <td>
+                                <span class="status-badge <%= order.status === 'Čaká na schválenie' ? 'pending' : (order.status.startsWith('Schválené') ? 'approved' : 'rejected') %>">
+                                    <%= order.status %>
+                                </span>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+
+    <script>
+        function updateLEDInfo() {
+            const select = document.getElementById('led-select');
+            const selectedOption = select.options[select.selectedIndex];
+            document.getElementById('res-val').innerText = selectedOption.getAttribute('data-res');
+            document.getElementById('len-val').innerText = selectedOption.getAttribute('data-len');
+            document.getElementById('price-val').innerText = selectedOption.getAttribute('data-price');
+            document.getElementById('info-box').style.display = 'block';
+            
+            if(document.getElementById('preview-video').style.display !== 'block' && document.getElementById('preview-image').style.display !== 'block') {
+                document.getElementById('placeholder').innerText = "Čaká sa na podklad pre " + selectedOption.text;
+            }
+        }
+
+        function previewFile() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            const video = document.getElementById('preview-video');
+            const image = document.getElementById('preview-image');
+            const placeholder = document.getElementById('placeholder');
+            const uploadText = document.getElementById('upload-text');
+
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                placeholder.style.display = 'none';
+                uploadText.innerText = "Načítané: " + file.name;
+
+                // DYNAMICKÁ KONTROLA: Podľa typu súboru zapneme buď video tag, alebo image tag
+                if (file.type.includes('video')) {
+                    image.style.display = 'none';
+                    video.src = fileURL;
+                    video.style.display = 'block';
+                } else if (file.type.includes('image')) {
+                    video.style.display = 'none';
+                    image.src = fileURL;
+                    image.style.display = 'block';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
