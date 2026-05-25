@@ -13,5 +13,10 @@
     "username": "sa",
     "password": "sa",
     "role": "client"
+  },
+  {
+    "username": "as",
+    "password": "as",
+    "role": "client"
   }
 ]

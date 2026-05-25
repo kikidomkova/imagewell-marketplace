@@ -6,7 +6,7 @@
     <title>ImageWell - Admin Moderácia</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: #121212; color: #fff; padding: 40px; }
+        body { background-color: #121212; color: #fff; padding: 40px; position: relative; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 2px solid #222; padding-bottom: 20px; }
         .logo { font-size: 24px; font-weight: bold; color: #ff0055; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; background:#1e1e1e; border-radius: 8px; overflow:hidden; }
@@ -20,9 +20,26 @@
         .btn-approve { background: #2ecc71; color: #fff; }
         .btn-reject { background: #e74c3c; color: #fff; }
         video, img { width: 120px; height: 70px; background: #000; object-fit: cover; border-radius: 4px; display: block; }
+
+        /* 🔥 ŠTÝL PRE PUSH UP NOTIFIKÁCIU */
+        .push-notification {
+            position: fixed; top: 20px; right: -350px; width: 320px; background: #ff0055; color: white;
+            padding: 20px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999;
+        }
+        .push-notification.show { right: 20px; }
+        .push-notification h4 { margin-bottom: 5px; font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .push-notification p { font-size: 13px; color: #ffe0eb; }
+        .push-reload-btn { margin-top: 10px; background: white; color: #ff0055; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
+
+    <div id="push-box" class="push-notification">
+        <h4>🚨 NOVÁ KAMPANŇ!</h4>
+        <p id="push-text">Zákazník práve odoslal reklamu.</p>
+        <button class="push-reload-btn" onclick="window.location.reload()">Aktualizovať zoznam</button>
+    </div>
 
     <div class="header">
         <div class="logo">ImageWell <span style="color:#fff">Admin Control</span></div>
@@ -71,7 +88,7 @@
                                     <button type="submit" name="action" value="reject" class="btn btn-reject">Zamietnuť</button>
                                     <button type="submit" name="action" value="delete" class="btn" style="background:#555; color:#fff;">Zmazať</button>
                                 <% } else { %>
-                                    <button type="submit" name="action" value="delete" class="btn" style="background:#555; color:#fff;">Zmazať z histórie</button>
+                                    <button type="submit" name="action" value="delete" class="btn" style="background:#555; color:#fff;">Zmazať</button>
                                 <% } %>
                             </form>
                         </td>
@@ -81,5 +98,29 @@
         </table>
     <% } %>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const pushBox = document.getElementById('push-box');
+        const pushText = document.getElementById('push-text');
+
+        // Počúvanie signálu zo servera
+        socket.on('newCampaignNotification', (data) => {
+            // Nastavenie textu do Push banneru
+            pushText.innerText = `Na lokáciu "${data.led}" bol nahraný súbor: ${data.fileName}`;
+            
+            // Zobrazenie Push up okna na obrazovke
+            pushBox.classList.add('show');
+
+            // Zvukový efekt (pípnutie), aby to admin neprehliadol
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // Vyšší tón
+            oscillator.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.15); // Pípnutie na 150ms
+        });
+    </script>
 </body>
 </html>
