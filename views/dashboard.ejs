@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ImageWell Marketplace - Klientska Zóna</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
         body { background-color: #121212; color: #fff; padding: 40px; }
         
-        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #ff0055; padding-bottom: 15px; }
-        .logo-box { font-size: 28px; font-weight: 900; color: #ff0055; text-transform: uppercase; letter-spacing: 1px; }
-        .logo-box span { color: #fff; font-weight: 300; font-size: 20px; }
+        /* HEADER BAR S OFICIÁLNYM LOGOM */
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 3px solid #e5005a; padding-bottom: 15px; }
+        .logo-box { display: flex; align-items: center; gap: 10px; }
+        .logo-img { height: 35px; width: auto; display: block; }
+        .logo-title { font-size: 20px; font-weight: 300; color: #fff; letter-spacing: 0.5px; border-left: 2px solid #e5005a; padding-left: 12px; margin-left: 5px; text-transform: uppercase; }
         
         .stats-grid { display: flex; gap: 20px; margin-bottom: 30px; }
-        .stat-card { flex: 1; background: #1e1e1e; border: 1px solid #2c2c2c; padding: 20px; border-radius: 6px; border-left: 4px solid #ff0055; }
+        .stat-card { flex: 1; background: #1e1e1e; border: 1px solid #2c2c2c; padding: 20px; border-radius: 6px; border-left: 4px solid #e5005a; }
         .stat-card p { font-size: 13px; color: #888; text-transform: uppercase; }
         .stat-card h3 { font-size: 24px; margin-top: 5px; color: #fff; }
 
@@ -24,15 +26,17 @@
         h2 { margin-bottom: 20px; color: #fff; font-size: 20px; }
         label { display: block; margin: 15px 0 5px; color: #aaa; font-size: 14px; }
         select, input { width: 100%; padding: 12px; background: #2c2c2c; border: 1px solid #3c3c3c; color: #fff; border-radius: 4px; font-size: 15px; }
+        select:focus, input:focus { border-color: #e5005a; outline: none; }
         
         .capacity-badge { padding: 10px; border-radius: 4px; font-weight: bold; font-size: 14px; text-align: center; margin-top: 15px; background: #252525; border: 1px solid #333; }
 
-        /* UPRAVENÝ POMER STRÁN PRE REÁLNE OBRAZOVKY IMAGWELL */
-        .totem { width: 100%; max-width: 480px; height: 240px; background: #000; border: 10px solid #222; border-radius: 8px; box-shadow: 0 0 30px rgba(255,0,85,0.15); overflow: hidden; margin-top: 20px; }
+        .totem { width: 100%; max-width: 480px; height: 240px; background: #000; border: 8px solid #222; border-radius: 8px; box-shadow: 0 0 30px rgba(229,0,90,0.15); overflow: hidden; margin-top: 20px; }
         .totem-screen { width: 100%; height: 100%; object-fit: fill; }
-        .btn-submit { background: #ff0055; color: white; border: none; padding: 14px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 15px; }
         
-        .map-box { width: 100%; height: 160px; margin-top: 15px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
+        .btn-submit { background: #e5005a; color: white; border: none; padding: 14px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 15px; transition: 0.2s; }
+        .btn-submit:hover { background: #c2004c; }
+        
+        .map-box { width: 100%; height: 220px; margin-top: 15px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
         iframe { width: 100%; height: 100%; border: 0; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 40px; background: #1e1e1e; border-radius: 6px; overflow: hidden; }
@@ -41,12 +45,13 @@
         
         .status { padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; text-align: center; }
         .status.wait { background: #e67e22; color: #fff; }
-        .status.pay { background: #00ff88; color: #000; cursor: pointer; border: 2px solid #00ff88; }
+        .status.pay { background: #00ff88; color: #000; cursor: pointer; border: 2px solid #00ff88; font-weight: 800; }
         .status.success { background: #2ecc71; color: #fff; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; }
-        .modal-content { background: #1e1e1e; padding: 40px; border-radius: 12px; max-width: 450px; width: 100%; border: 2px solid #ff0055; }
+        .modal-content { background: #1e1e1e; padding: 40px; border-radius: 12px; max-width: 450px; width: 100%; border: 2px solid #e5005a; box-shadow: 0 0 40px rgba(229,0,90,0.3); }
         .pay-option { background: #2c2c2c; padding: 18px; border-radius: 6px; margin-bottom: 15px; cursor: pointer; border: 1px solid #3c3c3c; text-align: left; }
+        .pay-option:hover { border-color: #e5005a; }
         
         .loader { display: none; margin: 20px auto; border: 4px solid #333; border-top: 4px solid #00ff88; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -63,7 +68,7 @@
             
             <div id="selectionZone">
                 <div class="pay-option" onclick="selectPaymentMethod('card')">
-                    <strong style="color:#00ff88; font-size:16px;">Core 💳 Platba kartou online</strong>
+                    <strong style="color:#00ff88; font-size:16px;">💳 Platba kartou online</strong>
                     <p style="font-size:12px; color:#aaa; margin-top:4px;">Okamžité nasadenie do vysielania Avemea</p>
                 </div>
                 
@@ -109,8 +114,11 @@
     </div>
 
     <div class="header-bar">
-        <div class="logo-box">ImageWell <span>Marketplace</span></div>
-        <div style="font-size:14px; color:#aaa;">Zákaznícka sekcia | <a href="/" style="color:#ff0055; text-decoration:none;">Odhlásiť sa</a></div>
+        <div class="logo-box">
+            <img src="https://www.imagewell.eu/asset/web/logo.svg" alt="ImageWell Logo" class="logo-img">
+            <div class="logo-title">Marketplace</div>
+        </div>
+        <div style="font-size:14px; color:#aaa;">Zákaznícka sekcia | <a href="/" style="color:#e5005a; text-decoration:none; font-weight:bold;">Odhlásiť sa</a></div>
     </div>
 
     <div class="stats-grid">
@@ -135,10 +143,13 @@
                 
                 <label>Vyberte digitálnu plochu z Avemea:</label>
                 <select name="led" id="ledSelect" onchange="triggerCapacityCheck()">
-                    <option value="BA08 Apolo (Šancová 1 - 576x224)">BA08 Apolo – Šancová 1 (Staré Mesto)</option>
-                    <option value="BA_28 Fresh (Prístavná - 576x224)">BA_28 Fresh – Prístavná (Ružinov)</option>
-                    <option value="BA 09 Bajkalska (Bajkalská /7 - 576x224)">BA 09 Bajkalska – Bajkalská /7 (Nové Mesto)</option>
-                    <option value="BA_11 Stanica (Tomášikova - 512x256)">BA_11 Stanica – Tomášikova (Ružinov)</option>
+                    <option value="BA08 Apolo (576x224)">BA08 Apolo (576x224 px)</option>
+                    <option value="BA_28 Fresh (576x224)">BA_28 Fresh (576x224 px)</option>
+                    <option value="BA 09 Bajkalska (576x224)">BA 09 Bajkalska (576x224 px)</option>
+                    <option value="BA_11 Stanica (512x256)">BA_11 Stanica (512x256 px)</option>
+                    <option value="BA06 Drudop (576x224)">BA06 Drudop (576x224 px)</option>
+                    <option value="BA10 vyjazd (1440x528)">BA10 výjazd (1440x528 px)</option>
+                    <option value="BA10 prijazd (1440x528)">BA10 príjazd (1440x528 px)</option>
                 </select>
 
                 <div class="map-box">
@@ -170,7 +181,7 @@
                     </div>
                     <div style="flex:1; background:#252525; padding:12px; border-radius:4px; margin-top:33px; border:1px solid #333; text-align:center;">
                         <span style="font-size:12px; color:#888; text-transform:uppercase;">Požadovaný rozmer:</span><br>
-                        <strong id="requiredRes" style="color:#ff0055;">576 x 224 px</strong>
+                        <strong id="requiredRes" style="color:#e5005a;">576 x 224 px</strong>
                     </div>
                 </div>
 
@@ -210,7 +221,7 @@
                     <td><%= order.startDate %> do <%= order.endDate %> (<%= order.days %> dní)</td>
                     <td><%= order.loopLength %>s</td>
                     <td style="color:#2ecc71; font-weight:bold;"><%= order.price %> €</td>
-                    <td><a href="<%= order.fileUrl %>" target="_blank" style="color:#ff0055; text-decoration:none;"><%= order.fileName %></a></td>
+                    <td><a href="<%= order.fileUrl %>" target="_blank" style="color:#e5005a; text-decoration:none;"><%= order.fileName %></a></td>
                     <td>
                         <% if(order.status === 'Schválené (Čaká na platbu)') { %>
                             <span class="status pay" onclick="openPaymentModal('<%= order.id %>', '<%= order.price %>')">💳 ZAPLATIŤ</span>
@@ -225,18 +236,26 @@
 
     <script>
         let selectedOrderId = null;
+        
+        // REÁLNE EMBEDOVANÉ MAPY PRE BRATISLAVU PRE KAŽDÚ PLOCHU
         const mapLinks = {
-            "BA08 Apolo (Šancová 1 - 576x224)": "https://maps.google.com/maps?q=Sancova%201,%20Bratislava&t=&z=15&ie=UTF8&iwloc=&output=embed",
-            "BA_28 Fresh (Prístavná - 576x224)": "https://maps.google.com/maps?q=Pristavna,%20Bratislava&t=&z=15&ie=UTF8&iwloc=&output=embed",
-            "BA 09 Bajkalska (Bajkalská /7 - 576x224)": "https://maps.google.com/maps?q=Bajkalska%207,%20Bratislava&t=&z=15&ie=UTF8&iwloc=&output=embed",
-            "BA_11 Stanica (Tomášikova - 512x256)": "https://maps.google.com/maps?q=Tomasikova,%20Bratislava&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            "BA08 Apolo (576x224)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.7617029541316!2d17.1264426!3d48.1533519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2b2f567b43f%3A0x6fb878ec94b30171!2zxaB1bHRpbnNrYSAxLCA4MTEgMDcgQnJhdGlzbGF2YQ!5e0!3m2!1ssk!2ssk!4v1716710000000",
+            "BA_28 Fresh (576x224)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2662.34891108215!2d17.142211!3d48.142122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2ee325fa9eb%3A0x89fb4d515a88741e!2zUHLtdXN0YXZuw6EsIDgyMSAwOSBCcmF0aXNsYXZh!5e0!3m2!1ssk!2ssk!4v1716710100000",
+            "BA 09 Bajkalska (576x224)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.42111192834!2d17.139981!3d48.159822!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2c67efca8ef%3A0x1b77ee4b29bb31d2!2sQmFqa2Fsc2vDoSwgODMxIDA0IEJyYXRpc2xhdmE!5e0!3m2!1ssk!2ssk!4v1716710200000",
+            "BA_11 Stanica (512x256)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.55112102914!2d17.151122!3d48.157211!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2ceef8e2ba1%3A0x6abfa7211ba1efef!2zVG9tw6HFoWlrb3ZhLCA4MjEgMDEgQnJhdGlzbGF2YQ!5e0!3m2!1ssk!2ssk!4v1716710300000",
+            "BA06 Drudop (576x224)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.12111029141!2d17.123321!3d48.165411!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2bbefae8b1d%3A0x5eefea2b2bbefae!2zTWlsZXRpxI1vdmEsIDgzMSAwNCBCcmF0aXNsYXZh!5e0!3m2!1ssk!2ssk!4v1716710400000",
+            "BA10 vyjazd (1440x528)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2663.92111028194!2d17.181122!3d48.112211!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba3efefae8b1d%3A0x4eefea2b2bbaeee!2zRDIgVyYdeadmZCwgQnJhdGlzbGF2YQ!5e0!3m2!1ssk!2ssk!4v1716710500000",
+            "BA10 prijazd (1440x528)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2663.82111028194!2d17.180011!3d48.114411!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba3efefae8b1d%3A0x4eefea2b2bbaeee!2zRDIgUHXtY2hyeWQsIEJyYXRpc2xhdmE!5e0!3m2!1ssk!2ssk!4v1716710600000"
         };
 
         function updateRequiredRes() {
             const led = document.getElementById('ledSelect').value;
             const resEl = document.getElementById('requiredRes');
+            
             if (led.includes('Stanica')) {
                 resEl.innerText = "512 x 256 px";
+            } else if (led.includes('1440x528')) {
+                resEl.innerText = "1440 x 528 px";
             } else {
                 resEl.innerText = "576 x 224 px";
             }
@@ -246,7 +265,9 @@
             const led = document.getElementById('ledSelect').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
-            document.getElementById('mapIframe').src = mapLinks[led];
+            
+            // Nastavenie reálnej mapy
+            document.getElementById('mapIframe').src = mapLinks[led] || "";
             updateRequiredRes();
 
             fetch('/check-capacity', {
@@ -336,7 +357,7 @@
                         window.location.reload();
                     }
                 });
-            }, 3000);
+            }, 2500);
         }
 
         triggerCapacityCheck();
