@@ -36,7 +36,8 @@
         .btn-submit { background: #e5005a; color: white; border: none; padding: 14px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 15px; transition: 0.2s; }
         .btn-submit:hover { background: #c2004c; }
         
-        .map-box { width: 100%; height: 220px; margin-top: 15px; border-radius: 4px; overflow: hidden; border: 1px solid #333; }
+        /* MAP BOX KONFIGUROVANÝ PRE MAPY */
+        .map-box { width: 100%; height: 260px; margin-top: 15px; border-radius: 6px; overflow: hidden; border: 1px solid #333; background: #000; }
         iframe { width: 100%; height: 100%; border: 0; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 40px; background: #1e1e1e; border-radius: 6px; overflow: hidden; }
@@ -153,7 +154,7 @@
                 </select>
 
                 <div class="map-box">
-                    <iframe id="mapIframe" src=""></iframe>
+                    <iframe id="mapIframe" src="" allowfullscreen="" loading="lazy"></iframe>
                 </div>
 
                 <div style="display:flex; gap:15px;">
@@ -237,15 +238,15 @@
     <script>
         let selectedOrderId = null;
         
-        // REÁLNE EMBEDOVANÉ MAPY PRE BRATISLAVU PRE KAŽDÚ PLOCHU
+        // REÁLNE GPS SÚRADNICE MAPOVÝCH EMBEDOV (Satelit a špendlík na 1 klik)
         const mapLinks = {
-            "BA08 Apolo (576x224)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.7617029541316!2d17.1264426!3d48.1533519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2b2f567b43f%3A0x6fb878ec94b30171!2zxaB1bHRpbnNrYSAxLCA4MTEgMDcgQnJhdGlzbGF2YQ!5e0!3m2!1ssk!2ssk!4v1716710000000",
-            "BA_28 Fresh (576x224)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2662.34891108215!2d17.142211!3d48.142122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2ee325fa9eb%3A0x89fb4d515a88741e!2zUHLtdXN0YXZuw6EsIDgyMSAwOSBCcmF0aXNsYXZh!5e0!3m2!1ssk!2ssk!4v1716710100000",
-            "BA 09 Bajkalska (576x224)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.42111192834!2d17.139981!3d48.159822!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2c67efca8ef%3A0x1b77ee4b29bb31d2!2sQmFqa2Fsc2vDoSwgODMxIDA0IEJyYXRpc2xhdmE!5e0!3m2!1ssk!2ssk!4v1716710200000",
-            "BA_11 Stanica (512x256)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.55112102914!2d17.151122!3d48.157211!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2ceef8e2ba1%3A0x6abfa7211ba1efef!2zVG9tw6HFoWlrb3ZhLCA4MjEgMDEgQnJhdGlzbGF2YQ!5e0!3m2!1ssk!2ssk!4v1716710300000",
-            "BA06 Drudop (576x224)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2661.12111029141!2d17.123321!3d48.165411!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba2bbefae8b1d%3A0x5eefea2b2bbefae!2zTWlsZXRpxI1vdmEsIDgzMSAwNCBCcmF0aXNsYXZh!5e0!3m2!1ssk!2ssk!4v1716710400000",
-            "BA10 vyjazd (1440x528)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2663.92111028194!2d17.181122!3d48.112211!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba3efefae8b1d%3A0x4eefea2b2bbaeee!2zRDIgVyYdeadmZCwgQnJhdGlzbGF2YQ!5e0!3m2!1ssk!2ssk!4v1716710500000",
-            "BA10 prijazd (1440x528)": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2663.82111028194!2d17.180011!3d48.114411!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ba3efefae8b1d%3A0x4eefea2b2bbaeee!2zRDIgUHXtY2hyeWQsIEJyYXRpc2xhdmE!5e0!3m2!1ssk!2ssk!4v1716710600000"
+            "BA08 Apolo (576x224)": "https://maps.google.com/maps?q=48.141976,17.130612&t=k&z=19&output=embed",
+            "BA_28 Fresh (576x224)": "https://maps.google.com/maps?q=48.165920,17.150567&t=k&z=19&output=embed",
+            "BA 09 Bajkalska (576x224)": "https://maps.google.com/maps?q=48.154968,17.145410&t=k&z=19&output=embed",
+            "BA_11 Stanica (512x256)": "https://maps.google.com/maps?q=48.155748,17.106966&t=k&z=19&output=embed",
+            "BA06 Drudop (576x224)": "https://maps.google.com/maps?q=48.146443,17.150977&t=k&z=19&output=embed",
+            "BA10 vyjazd (1440x528)": "https://maps.google.com/maps?q=48.142617,17.126278&t=k&z=19&output=embed",
+            "BA10 prijazd (1440x528)": "https://maps.google.com/maps?q=48.142617,17.126278&t=k&z=19&output=embed"
         };
 
         function updateRequiredRes() {
@@ -266,7 +267,7 @@
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             
-            // Nastavenie reálnej mapy
+            // Satelitná mapa sa bleskovo načíta aj so špendlíkom
             document.getElementById('mapIframe').src = mapLinks[led] || "";
             updateRequiredRes();
 
