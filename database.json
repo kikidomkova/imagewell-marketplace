@@ -4,7 +4,7 @@
     "led": "LED 28 – Betliarska",
     "videoUrl": "/uploads/1779705470506.url",
     "fileName": "Buy LED Display and LED Modules.url",
-    "status": "Čaká na schválenie",
+    "status": "Schválené (Čaká na platbu)",
     "date": "25. 5. 2026"
   },
   {
@@ -13,7 +13,7 @@
     "fileUrl": "/uploads/1779708654788.png",
     "fileName": "SnÃ­mka obrazovky 2026-05-25 092223.png",
     "fileType": "image",
-    "status": "Čaká na schválenie",
+    "status": "Zamietnuté",
     "date": "25. 5. 2026"
   },
   {
@@ -22,7 +22,33 @@
     "fileUrl": "/uploads/1779709017841.png",
     "fileName": "SnÃ­mka obrazovky 2026-05-25 095348.png",
     "fileType": "image",
-    "status": "Čaká na schválenie",
+    "status": "Schválené (Čaká na platbu)",
     "date": "25. 5. 2026"
+  },
+  {
+    "id": 1779709633474,
+    "led": "LED Bajkalská /7 (Bratislava)",
+    "startDate": "2026-06-01",
+    "endDate": "2026-06-07",
+    "days": 6,
+    "loopLength": 10,
+    "fileUrl": "/uploads/1779709633336.png",
+    "fileName": "SnÃ­mka obrazovky 2026-05-25 090336.png",
+    "fileType": "image",
+    "price": "150.00",
+    "status": "Čaká na schválenie"
+  },
+  {
+    "id": 1779783046570,
+    "led": "LED Bajkalská /7 (Bratislava)",
+    "startDate": "2026-06-01",
+    "endDate": "2026-06-30",
+    "days": 29,
+    "loopLength": 10,
+    "fileUrl": "/uploads/1779783046549.png",
+    "fileName": "576x224.png",
+    "fileType": "image",
+    "price": "725.00",
+    "status": "Zaplatené (Kartou online)"
   }
 ]

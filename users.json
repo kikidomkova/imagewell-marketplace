@@ -18,5 +18,10 @@
     "username": "as",
     "password": "as",
     "role": "client"
+  },
+  {
+    "username": "ad",
+    "password": "ad",
+    "role": "client"
   }
 ]
