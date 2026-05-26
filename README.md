@@ -1,2 +1,2 @@
 # imagewell-marketplace
-low
+prompt
